@@ -1,0 +1,78 @@
+\documentclass[9pt]{beamer}
+\usefonttheme{professionalfonts}
+
+\usetheme{Boadilla}
+\usecolortheme{whale}
+\setbeamertemplate{navigation symbols}{}%remove navigation symbols
+\usenavigationsymbolstemplate{}
+\setbeamerfont{section number projected}{family=\rmfamily,series=\bfseries,size=\normalsize}
+\setbeamercolor{section number projected}{bg=black,fg=yellow}
+\setbeamerfont{subsection number projected}{family=\rmfamily,series=\bfseries,size=\normalsize}
+\setbeamercolor{subsection number projected}{bg=black,fg=yellow}
+\setbeamertemplate{sections/subsections in toc}[square]
+\include{asset/global_usepackage}
+\include{asset/global_newcommand}
+\include{asset/global_theorem_fancybox}
+\include{asset/global_newenviroment}
+\usepackage{tikz-qtree}
+\usepackage{tikz}
+\usepackage{mathpazo}
+\usepackage{pgfplots}
+\newcommand{\num}{pi}
+\pgfplotsset{compat=1.8}
+ % define the plot style and the axis style
+\tikzset{elegant/.style={smooth,thick,samples=50,magenta}}
+
+\begin{document}
+\title[管理运筹学]{管理运筹学}
+\author[DYH]
+{董银红}
+\institute[]
+{
+  % \inst{1}
+中南民族大学管理学院
+}
+\date[]
+{\today}
+\subject{Computational Mathematics}
+
+\frame{
+  \titlepage
+  % \begin{tikzpicture}[remember picture,overlay]
+  %   \node [opacity=.9] at (current page.south west) [above right=1.3cm]{\includegraphics[width=0.15\textwidth]{whu_log.jpeg} };
+  %   \node [opacity=.35] at (current page.south) [above] {\includegraphics[width=\textwidth]{ML_log.png} };
+  % \end{tikzpicture}
+}
+
+\begin{frame}
+  \frametitle{目录}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\AtBeginSection[]
+{
+  \begin{frame}[shrink]
+    \frametitle{目录}
+    \tableofcontents[currentsection,hideallsubsections]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}
+    \frametitle{目录}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+} 
+
+\input{1.tex}
+\input{2.tex}
+\input{3.tex}
+%\input{4.tex}
+%\input{5.tex}
+%\input{6.tex}
+%\input{7.tex}
+%\input{8.tex}
+%\input{9.tex}
+
+\end{document}

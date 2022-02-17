@@ -1,0 +1,961 @@
+\section{对偶线性规划与灵敏度分析}
+
+\subsection{变分法，哈密尔顿动力系统}
+
+\begin{frame}{\subsecname}
+\begin{definition}[拉格朗日量]
+定义光滑函数
+\begin{equation}\label{eq:lagrange}
+    L: \R^n \times \R^n \to \R, \quad
+    L = L(\vx, \vv), 
+\end{equation}
+称之为\red{拉格朗日量}. 
+\end{definition}
+\pause 
+
+设$T > 0$，$\vx^0, \vx^1 \in \R^n$已知。
+\begin{block}{变分法研究的基本问题（变分问题）}
+求曲线$\vx^*: [0, 1] \to \R^n$以极小化泛函
+\begin{equation}\label{eq:cvp}
+    I[\vx(\cdot)] = \int_0^T L(\vx(t), \dot\vx(t))\,dt, 
+\end{equation}
+对所有满足条件$\vx(0)=\vx^0, \vx(T)=\vx^1$的函数$\vx(\cdot)$。
+\end{block}
+\end{frame}
+
+% \subsubsection{欧拉-拉格朗日方程}
+\begin{frame}{\subsecname}
+    对拉格朗日量$L=L(\vx,\vv)$，将变量$\vx$看做是位置，将$\vv$看做是速度。记
+    $$
+    \frac{\partial L}{\partial x_i} = L_{x_i}, \quad
+    \frac{\partial L}{\partial v_i} = L_{v_i}
+    $$
+    及
+    $$
+    \nabla_{\vx} L = 
+    \begin{bmatrix}
+    L_{x_1} & \cd & L_{x_n}
+    \end{bmatrix}^T, \quad 
+    \nabla_{\vv} L = 
+    \begin{bmatrix}
+    L_{v_1} & \cd & L_{v_n}
+    \end{bmatrix}^T. 
+    $$
+    
+    \pause 
+    \begin{theorem}[欧拉-拉格朗日方程]
+    设$\vx^*(\cdot)$为变分问题\eqref{eq:cvp}的解，则$\vx^*(\cdot)$必为\red{欧拉-拉格朗日方程}
+    \begin{equation}\label{eq:EL}
+        \frac{d}{dt} \left[\nabla_{\vv} L(\vx(t),\vv(t))\right] = \nabla_{\vx} L(\vx(t),\vv(t))
+    \end{equation}
+    的解。
+    \end{theorem}
+    \pause 
+    \begin{block}{注}
+    \begin{itemize}
+    \item 若能求解欧拉-拉格朗日方程，则原变分问题的解（若存在）必在这些解中。
+   \item 欧拉-拉格朗日方程是一个拟线性系统，它含$n$个二阶常微分方程，其中第$i$个方程可表示为
+   \begin{equation}
+       \frac{d}{dt} \left[L_{v_i}(\vx(t), \dot\vx(t))\right] = L_{x_i}(\vx(t), \dot\vx(t)).
+   \end{equation}
+    \end{itemize}
+
+    \end{block} 
+\end{frame}
+
+\begin{frame}{\subsecname}
+    \begin{block}{证明.}
+    \begin{enumerate}
+        \item 对任意光滑函数$\vy: [0,T]\to \R^n, \vy(0)=\vy(T)=\v0$，定义
+        $$
+        i(\tau) := I[\vx^*(\cdot) + \tau\vy(\cdot)], \quad \forall \tau \in \R.
+        $$
+        由于$\vx^*(\cdot)$为极小值点，故
+        $$
+        i(\tau) \ge i(0) = I[\vx^*(\cdot)] .
+        $$
+        即$i(\tau)$在$\tau=0$处取到极小值，从而
+        $$
+        i^\prime(0) = 0.
+        $$
+    \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+    \begin{block}{证明.【续】}
+    \begin{enumerate}[2]
+        \item 计算$i^\prime(x)$. 由
+        $$
+        i(\tau) = \int_0^T L(\vx^*(t)+\tau\vy(t), \dot\vx^*(t)+\tau\dot\vy(t))\,dt
+        $$
+        可算得
+        $$
+        \begin{aligned}
+        i^\prime(\tau) = \int_0^T&\left(\sum_{i=1}^nL_{x_i}\left(\vx^*(t)+\tau\vy(t), \dot\vx^*(t)+\tau\dot\vy(t)\right)y_i(t) + \right.\\
+        &~~\left.\sum_{i=1}^nL_{v_i}\left(\vx^*(t)+\tau\vy(t), \dot\vx^*(t)+\tau\dot\vy(t)\right)\dot y_i(t)\right)\,dt
+        \end{aligned}
+        $$
+        令$\tau=0$，则
+        $$
+        i^\prime(0) = \int_0^T\left(\sum_{i=1}^nL_{x_i}\left(\vx^*(t), \dot\vx^*(t)\right)y_i(t) +\sum_{i=1}^nL_{x_i}\left(\vx^*(t), \dot\vx^*(t)\right)y_i(t)\right)\,dt, 
+        $$
+        该式对任意光滑函数$\vy: [0,T]\to \R^n, \vy(0)=\vy(T)=\v0$皆成立。
+     \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+    \begin{block}{证明.【续】}
+    \begin{enumerate}[3]
+        \item  任取$1\le j \le n$并固定之，选取$\vy(\cdot)$，其分量为
+        $$
+        y_i(t) = \left\{
+        \begin{array}{cc}
+            \psi(t),  &  i=j,\\
+            0,   & i\ne j,
+        \end{array}
+        \right.
+        $$
+        其中$\psi:[0,T]\to \R$为任意满足$\psi(0)=\psi(T)=0$的函数，则
+        $$
+        0 = \int_0^T L_{x_j}\left(\vx^*(t), \dot\vx^*(t))\psi(t) + L_{v_j}(\vx^*(t),\dot\vx^*(t)\right) \dot\psi(t)\,dt.
+        $$
+        利用分部积分及$\psi(0)=\psi(T)=0$可知
+        $$
+        0 = \int_0^T \left[L_{x_j}\left(\vx^*(t), \dot\vx^*(t)\right) - \frac{d}{dt}L_{v_j}\left(\vx^*(t),\dot\vx^*(t)\right)\right] \psi(t)\,dt.
+        $$
+        由$j$和$\psi(t)$的任意性可知，
+        $$
+        L_{x_j}\left(\vx^*(t), \dot\vx^*(t)\right) - \frac{d}{dt}L_{v_j}\left(\vx^*(t),\dot\vx^*(t)\right) = 0, \quad 1 \le j \le n. 
+        $$
+        定理得证。
+    \end{enumerate}
+    \end{block}
+\end{frame}
+
+% \subsubsection{哈密尔顿系统}
+\begin{frame}{\subsecname}
+\begin{definition}[广义动量]
+对于给定的曲线$\vx(\cdot)$，定义
+\begin{equation}\label{eq:p}
+    \vp(t) := \nabla_{\vv} L(\vx(t),\vv(t)), \quad 0 \le t \le T,
+\end{equation}
+称之为广义动量（generalized momentum）。
+\end{definition}
+
+\begin{block}{重要假设}
+给定$\vx,\vp\in\R^n$，方程
+\begin{equation}
+\vp = \nabla_{\vv} L(\vx,\vv)
+\end{equation}
+的解记为
+\begin{equation}\label{eq:vxp}
+\vv = \vv(\vx,\vp).
+\end{equation}
+\end{block}
+
+\pause 
+\begin{definition}[哈密尔顿量]
+定义哈密尔顿量$H:\R^n\times \R^n \to \R$：
+\begin{equation}\label{eq:hamilton}
+    H(\vx, \vp) = \vp \cdot \vv(\vx, \vp) - L(\vx, \vv(\vx, \vp)),
+\end{equation}
+其中$\vv$由\eqref{eq:vxp}定义。
+\end{definition}
+\end{frame}
+
+\begin{frame}{\subsecname}
+    对哈密尔顿量$H:=H(\vx,\vp)$，记
+    $$
+    \frac{\partial H}{\partial x_i} = H_{x_i}, \quad
+    \frac{\partial H}{\partial p_i} = H_{p_i}
+    $$
+    及
+    $$
+    \nabla_{\vx} H = 
+    \begin{bmatrix}
+    H_{x_1} & \cd & H_{x_n}
+    \end{bmatrix}^T, \quad 
+    \nabla_{\vp} H = 
+    \begin{bmatrix}
+    H_{p_1} & \cd & H_{p_n}
+    \end{bmatrix}^T. 
+    $$
+    \begin{theorem}[哈密尔顿动力系统]
+    设$\vx(\cdot)$为欧拉-拉格朗日方程的解，$\vp(\cdot)$由\eqref{eq:p}定义，则$(\vx(\cdot), \vp(\cdot))$为\red{哈密尔顿动力系统}
+    \begin{equation}\label{eq:HDS}
+        \left\{
+        \begin{array}{rcr}
+            \dot \vx(t) &=&  \nabla_{\vp} H(\vx(t), p(t)),   \\[.1in]
+            \dot \vp(t) &=& -\nabla_{\vx} H(\vx(t), p(t)).
+        \end{array}
+        \right.
+    \end{equation}
+    另外，映射$t \mapsto H(\vx(t), \vp(t))$为常数。
+    \end{theorem}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{block}{证明.}
+\begin{enumerate}
+    \item 由$H(\vx,\vp)=\vp\cdot\vv(\vx,\vp)-L(\vx,\vv(\vx,\vp))$可知，
+    $$
+    \nabla_\vx H(\vx,\vp) = \vp\cdot \nabla_\vx \vv(\vx,\vp) - \nabla_\vx L(\vx,\vv(\vx,\vp)) - \nabla_\vv L(\vx,\vv(\vx,\vp)) \nabla_\vx \vv(\vx,\vp),
+    $$
+    再由$\vp=\nabla_\vv L(\vx,\vv)$可得
+    \begin{equation}\label{eq:Hx}
+        \nabla_\vx H(\vx,\vp) = -  \nabla_\vx L(\vx,\vv(\vx,\vp)) .
+    \end{equation}
+    注意到\red{$~\vp(t)=\nabla_\vv L(\vx(t),\dot\vx(t))$当且仅当$\dot\vx(t)=\vv(\vx(t),\vp(t))$}。
+    因此，若$\vx(t)$是欧拉-拉格朗日方程的解，则
+    $$
+    \dot\vp(t) = \frac{d}{dt}\nabla_\vv L(\vx(t),\dot\vx(t)) 
+    = \nabla_\vx  L(\vx(t),\dot\vx(t)) 
+    = \nabla_\vx  L(\vx(t),\vv(\vx(t),\vp(t))).
+    $$
+    由\eqref{eq:Hx}可知，
+    $$
+    \dot\vp(t) = - \nabla_\vx H(\vx,\vp).
+    $$
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{block}{证明.【续】}
+\begin{enumerate}[2]
+    \item 由$H(\vx,\vp)=\vp\cdot\vv(\vx,\vp)-L(\vx,\vv(\vx,\vp))$可知，
+    $$
+    \nabla_\vp H(\vx,\vp) = \vv(\vx,\vp) + \vp \cdot \nabla_\vp \vv - \nabla_\vv L(\vx,\vv(\vx,\vp)) \nabla_\vp \vv(\vx,\vp).
+    $$
+    再由$\vp=\nabla_\vv L(\vx,\vv)$可得
+    \begin{equation}\label{eq:Hp}
+        \nabla_\vp H(\vx,\vp) = \vv(\vx,\vp).
+    \end{equation}
+    注意到\red{$~\vp(t)=\nabla_\vv L(\vx(t),\dot\vx(t))$当且仅当$\dot\vx(t)=\vv(\vx(t),\vp(t))$}。
+    由\eqref{eq:Hp}可知，
+    $$
+    \dot\vx(t) = \nabla_\vp H(\vx(t),\vp(t)).
+    $$
+    \pause 
+    \item 由
+    $$
+    \begin{aligned}
+    \frac{d}{dt} H(\vx(t),\vp(t)) &= \nabla_\vx H(\vx,\vp) \cdot \dot\vx(t)+\nabla_\vp H(\vx,\vp) \cdot \dot\vp(t)\\
+    &= -\dot\vp(t) \cdot \dot\vx(t)+\dot\vx(t) \cdot \dot\vp(t)\\
+    & = 0
+    \end{aligned}
+    $$
+    可知映射$t \mapsto H(\vx(t), \vp(t))$为常数。
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\small 
+    \begin{example}[物理实例]
+     定义拉格朗日量为
+     $$
+     L(\vx,\vv) = \frac{m|\vv|^2}{2} - V(\vx),
+     $$
+     可解释为动能(kinetic energy)减去势能(potential energy)。此时，
+     $$
+     \nabla_\vx L(\vx,\vv) = -\nabla V(\vx), ~~
+     \nabla_\vv L(\vx,\vv) = m\vv ~~\text{\red{（动量）}}.
+     $$
+     由此可知，
+     \begin{itemize}
+         \item 欧拉-拉格朗日方程为
+         $$
+         m\ddot \vx (t) = m \dot\vv(t) = -\nabla V(\vx) = \vF,
+         $$
+         此即\red{牛顿第二运动定律}。
+         \item 注意$\vp = \nabla_\vv L(\vx,\vv) = m\vv$为动量，则哈密尔顿量为
+         $$
+         H(\vx,\vp) = \vp \cdot \vv - L(\vx, \vv(\vx, \vp))
+         = \vp \cdot \frac{\vp}{m} - \frac{m|\vp|^2}{2m^2} + V(\vx)
+         = \frac{|\vp|^2}{2m} + V(\vx)
+         $$
+         此即动能与势能之和，亦即总能量（\red{由热力学第一定律，封闭系统中总能量不变}）。对应的哈密尔顿系统为
+         $$
+         \left\{
+         \begin{array}{rcl}
+              \dot \vx(t)&=& \frac{\vp(t)}{m},  \\[.1in]
+              \dot \vp(t)&=& -\nabla V(\vx).
+         \end{array}
+         \right.
+         $$
+     \end{itemize}
+    \end{example}
+\end{frame}
+
+\subsection{拉格朗日乘子法综述}
+
+\subsection{庞特里亚金极大值原理（固定时间，自由端点）}
+ 
+\begin{frame}{\subsecname}
+\begin{itemize}
+    \item $\vA\subset \R^m$，$\vf: \R^n\times \vA \to \R^n$和$\vx^0\in\R^n$。
+    \item \red{容许控制集合}
+    $$
+    \cA = \left\{\valpha(\cdot):[0,\infty]\mapsto \vA~|~\valpha(\cdot)\text{可测}\right\}.
+    $$
+    \item \red{常微分方程组}
+    \begin{equation}\label{eq:ode_sec4}
+        \left\{
+        \begin{array}{rcll}
+             \dot \vx(t)&=& \vf(\vx(t),\valpha(t)), & t > 0  \\
+             \vx(t)&=&\vx^0. & 
+        \end{array}
+        \right.
+    \end{equation}
+    其中$\valpha(\cdot)\in \cA$给定。
+    \item \red{收益泛函}
+    \begin{equation}\label{eq:payoff_sec4}
+        P[\valpha(\cdot)] = \int_0^T r(\vx(t),\valpha(t))\,dt + g(\vx(T)),
+    \end{equation}
+    其中终止时间$T>0$、运行收益$r:\R^n \times A\to \R$、终止收益$g:\R^n\to \R$给定。
+    \item \red{最优控制问题：} 求$\valpha^*(\cdot)$是的
+    $$
+    P[\valpha^*(\cdot)] = \max_{\valpha(\cdot)\in \cA} P[\valpha(\cdot)].
+    $$
+    \item \red{哈密尔顿量} 
+    \begin{equation}\label{eq:hamilton_control}
+        H(\vx,\vp,\valpha) = \vf(\vx,\valpha)\cdot \vp + r(\vx,\valpha), \quad \vx,\vp\in \R^n, \valpha\in \cA.
+    \end{equation}
+    % \item \blue{庞特里亚金极大值原理告诉我们：存在一个函数$\vp^*(\cdot)$和最优轨迹$\vx^*(\cdot)$满足一个哈密尔顿系统。}
+\end{itemize}
+ 
+    
+\end{frame}
+
+\begin{frame}{\subsecname}
+    \begin{theorem}[庞特里亚金极大值原理]
+    设$\valpha^*$为\eqref{eq:ode_sec4}和\eqref{eq:payoff_sec4}的最优控制，$\vx^*$为对应的最优轨迹，则存在一个共态（costate）函数$\vp^*:[0,T]\to \R^n$使得$(\vx^*, \vp^*)$是如下哈密尔顿系统的解：
+    \begin{numcases}{}
+        \dot \vx(t)=\nabla_\vp H(\vx(t), \vp(t), \valpha(t)), \label{eq:pmp1_hs1} \\[.1in]
+        \dot \vp(t)=-\nabla_\vx H(\vx(t), \vp(t), \valpha(t)). \label{eq:pmp1_hs2}
+    \end{numcases}
+    且
+    \begin{equation}\label{eq:pmp1_mp}
+        H(\vx^*(t), \vp^*(t), \valpha^*(t)) = \max_{\valpha(\cdot)\in \cA} H(\vx^*(t), \vp^*(t), \valpha(t)).  
+    \end{equation}
+    另外，
+    \begin{itemize}
+        \item 
+        \begin{equation}
+         H(\vx^*(t), \vp^*(t), \valpha^*(t)) \equiv C, ~~ \forall t \in [0,T].
+        \end{equation}
+        \item 
+        终止条件满足
+    \begin{equation}\label{eq:pmp1_transversality}
+        \vp^*(T) = \nabla g(\vx^*(T)).
+    \end{equation}
+    \end{itemize}
+ 
+    \end{theorem}
+\end{frame}
+
+\begin{frame}{\subsecname}
+    \begin{block}{注}
+    \begin{itemize}
+        \item \eqref{eq:pmp1_hs2}为伴随(adjoint)方程，而\eqref{eq:pmp1_mp}为极大值原理；\eqref{eq:pmp1_hs1}和\eqref{eq:pmp1_hs2}共同构成哈密尔顿系统；\eqref{eq:pmp1_transversality}称为横截条件，其重要性将在后面阐述。
+        \item 更具体地，
+        \begin{itemize}
+        \item \eqref{eq:pmp1_hs1}可表示为
+        $$
+        \dot \vx(t)=\vf(\vx,\valpha),
+        $$
+        即\eqref{eq:ode_sec4}中的动量方程。\\[.1in]
+        \item \eqref{eq:pmp1_hs2}可表示为
+        $$
+        \dot \vp(t)= - \nabla_{\vx} \vf(\vx(t),\valpha(t))^T \vp(t) - \nabla_\vx r(\vx(t),\valpha(t)),
+        $$
+        其中$\nabla_{\vx} \vf$为Jacobi矩阵，即
+        $$
+        \nabla_{\vx} \vf(\vx,\valpha) =
+        \begin{bmatrix}
+        f_{x_1}^1 & f_{x_2}^1 & \cd & f_{x_n}^1  \\[.1in]
+        f_{x_1}^2 & f_{x_2}^1 & \cd & f_{x_n}^2  \\[.1in]
+        \vdots & \vdots & \dd & \vdots  \\[.1in]
+        f_{x_1}^n & f_{x_2}^n & \cd & f_{x_n}^n  
+        \end{bmatrix}
+        $$
+        \end{itemize}
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{example}[经济消费的简单控制问题]
+ 记$x(t)$为$t$时刻的产出，$\alpha(t)$为$t$时刻再投资的产出份额。
+ \begin{itemize}
+ \item 动力方程 
+ $$
+ \left\{
+ \begin{array}{lc}
+      \dot x(t)=\alpha(t)x(t), & t \in (0, T], \\[.05in]
+      x(0) = x^0. & 
+ \end{array}
+ \right.
+ $$
+ 其中$x:\R\to \R, \alpha:\R\to A=[0,1]\subset \R, x^0>0$。\\[.1in]
+ \item 收益泛函 
+ $$
+ P[\alpha(\cdot)] = \int_0^T (1-\alpha(t))x(t)\,dt
+ $$
+ 表示总消费。
+ \\[.1in]
+ \item 最优控制问题：求$\alpha^*(\cdot)$使得
+ $$
+ P[\alpha(\cdot)] = \max_{\alpha(\cdot)\in \cA} P[\alpha(\cdot)] 
+ $$
+ \end{itemize} 
+\end{example}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{block}{解}
+对于该问题，
+\begin{itemize}
+\item \red{参数设置}
+$$
+m=n=1, ~
+f(x,\alpha)=\alpha x, ~
+r(x,\alpha)=(1-\alpha)x, ~
+g(x) = 0.
+$$
+\item \red{哈密尔顿量}
+$$
+H(x,p,\alpha) = f(x,\alpha) p + r(x,\alpha) = \alpha p x + (1-\alpha)x.
+$$
+\item \red{哈密尔顿系统}
+\begin{equation}
+    \left\{
+    \begin{array}{ll}
+        \dot x(t) %=  H_p 
+        = x(t)\alpha(t),  &  t \in (0,T], \\[.1in]
+        \dot p(t) %= -H_x 
+        =-1-\alpha(t)(p(t)-1),  &  t \in [0,T). 
+    \end{array}
+    \right.
+\end{equation}
+其中 
+\begin{equation}
+\left\{
+\begin{array}{l}
+    x(0) = x^0,  \\[0.05in]
+    p(T) %= \nabla_x g(x(T)) 
+    = 0.
+\end{array}
+\right.
+\end{equation}
+\item \red{极大值原理}
+$$
+H(x(t),p(t),\alpha(t)) = \max_{a\in [0,1]} \left\{a p(t)x(t)  + (1-a)x(t)\right\}. 
+$$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{block}{解【续】}
+\begin{enumerate}
+\item \blue{确定$\alpha(t)$与$p(t)$的关系}
+\item[] 
+由极大值原理以及$x(t) >0$，在$t$时刻应选取$\alpha(t)$以极大化$H(x,p,a)$，即
+$$
+\alpha(t) = \argmax_{a(t) \in [0,1]} H(x,p,a) = \argmax_{a(t) \in [0,1]} a(t)(p(t)-1). 
+$$
+因此，
+\begin{equation}\label{eq:alpha_p_ex1}
+\alpha(t) = \left\{
+\begin{array}{cl}
+    1, &  p(t) > 1, \\[.05in]
+    0, &  p(t) \le 1.
+\end{array}
+\right.
+\end{equation}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\small 
+\begin{block}{解【续】}
+\begin{enumerate}[2]
+\item \blue{确定共态$p^*(\cdot)$}
+\item[] 伴随方程可表示为
+\begin{equation}\label{eq:adj_ex1}
+    \left\{
+    \begin{array}{ll}
+        \dot p(t) = -1-\alpha(t)(p(t)-1),  &  t \in [0,T).  \\[0.05in]
+        p(T) = 0, & 
+    \end{array}
+    \right.
+\end{equation} \pause 
+由$p(T)=0$及$p(\cdot)$的连续性可知，当$t$靠近$T$时，$p(t) \le 1$，从而$\alpha(t)=0$。此时，\eqref{eq:adj_ex1}可改写为
+\begin{equation}\label{eq:adj1_ex1}
+    \left\{
+    \begin{array}{ll}
+        \dot p(t) = -1,  &  t \text{靠近} T.  \\[0.05in]
+        p(T) = 0, & 
+    \end{array}
+    \right.
+\end{equation}
+其解为$p(t)=T-t$。\pause 
+注意到当$t\le T-1$时，$p(t) > 1$，从而$\alpha(t) = 1$，因此
+$$
+p(t) = T-t, ~~ t \in[T-1, T). 
+$$
+\pause 
+当$t\le T-1$时，\eqref{eq:adj_ex1}可改写为
+\begin{equation}\label{eq:adj2_ex1}
+    \left\{
+    \begin{array}{ll}
+        \dot p(t) = - p(t),  &  t \in[0, T-1].  \\[0.05in]
+        p(T-1) = 1, & 
+    \end{array}
+    \right.
+\end{equation}
+其解为$p(t) = e^{T-1-t}$。综上所述，共态$p^*(\cdot)$可确定为
+$$
+p^*(t) = \left\{
+\begin{array}{ll}
+e^{T-1-t}, & t \in[0, T-1], \\[0.05in]
+T-t, & t \in[T-1, T). 
+\end{array}
+\right.
+$$
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\small 
+\begin{block}{解【续】}
+
+\begin{enumerate} 
+\setcounter{enumi}{2}
+\item \blue{确定最优控制$\alpha^*(\cdot)$}
+\item[]  由\eqref{eq:alpha_p_ex1}可知，最优控制$\alpha^*(\cdot)$可确定为
+$$
+\alpha^*(t) = \left\{
+\begin{array}{cl}
+    1, &  t \in[0, t^*), \\[.04in]
+    0, &  t \in[t^*, T],
+\end{array}
+\right.
+$$
+其中$t^*=T-1$为最佳切换时间。\pause \\[.1in]
+\item \blue{确定最优轨迹$\vx^*(\cdot)$}
+\item[] 当$t\in[0, T-1]$时，动力方程为
+$$
+\left\{
+\begin{array}{ll}
+    \dot x(t) = x(t),  &  t \in (0, T-1], \\[.04in]
+     x(0) = x^0, & 
+\end{array}
+\right.
+$$
+其解为$x(t) = x^0 e^t$。当$t\in[T-1, T]$时，动力方程为
+$$
+\left\{
+\begin{array}{ll}
+    \dot x(t) = 0,  &  t \in (T-1, T], \\[.04in]
+     x(0) = x^0 e^{T-1}, & 
+\end{array}
+\right.
+$$
+其解为$x(t) = x^0 e^{T-1}$。综上所述，最优轨迹$x^*(\cdot)$可确定为
+$$
+x^*(t) = \left\{
+\begin{array}{cl}
+    x^0 e^t, &  t \in[0, T-1), \\[.04in]
+    x^0 e^{T-1}, &  t \in[T-1, T].
+\end{array}
+\right.
+$$
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{example}[线性二次型调节器(Linear-Quadratic Regulator, LQR)]
+ \begin{itemize}
+ \item \red{动力方程}
+ $$
+ \left\{
+ \begin{array}{lc}
+      \dot x(t)=x(t)+\alpha(t), & t \in (0, T], \\[.05in]
+      x(0) = x^0. & 
+ \end{array}
+ \right.
+ $$
+ 其中$x:\R\to \R, \alpha:\R\to A=\R$。\\[.1in]
+ \item \red{代价泛函}
+ $$
+ C[\alpha(\cdot)] = \int_0^T \left[x(t)^2+\alpha(t)^2\right]\,dt
+ $$
+ \item \red{收益泛函}
+ $$
+ P[\alpha(\cdot)] = -\int_0^T \left[x(t)^2+\alpha(t)^2\right]\,dt
+ $$
+ \\[.1in]
+ \item \red{最优控制问题}：求$\alpha^*(\cdot)$使得\blue{代价最小}，即
+ $$
+ C[\alpha^*(\cdot)] = \min_{\alpha(\cdot)\in \cA} C[\alpha(\cdot)],
+ $$
+ 或\blue{收益最大}，即
+ $$
+ P[\alpha^*(\cdot)] = \max_{\alpha(\cdot)\in \cA} P[\alpha(\cdot)],
+ $$
+ \end{itemize} 
+\end{example}
+\end{frame}
+
+
+\begin{frame}{\subsecname}
+\begin{block}{解}
+对于该问题，
+\begin{itemize}
+\item \red{参数设置}
+$$
+m=n=1, ~
+f(x,\alpha)=x+\alpha, ~
+r(x,\alpha)=-x^2-\alpha^2, ~
+g(x) = 0.
+$$
+\item \red{哈密尔顿量}
+$$
+H(x,p,\alpha) = f(x,\alpha) p + r(x,\alpha) = (x+\alpha) p(t) - (x^2+\alpha^2).
+$$
+\item \red{哈密尔顿系统}
+\begin{equation}
+    \left\{
+    \begin{array}{ll}
+        \dot x(t) %=  H_p 
+        = x(t)+\alpha(t),  &  t \in (0,T], \\[.1in]
+        \dot p(t) %= -H_x 
+        =2x(t)-p(t),  &  t \in [0,T). 
+    \end{array}
+    \right.
+\end{equation}
+其中 
+\begin{equation}
+\left\{
+\begin{array}{l}
+    x(0) = x^0,  \\[0.05in]
+    p(T) %= \nabla_x g(x(T)) 
+    = 0.
+\end{array}
+\right.
+\end{equation}
+\item \red{极大值原理}
+$$
+H(x(t),p(t),\alpha(t)) = \max_{a\in \R} \left\{(x(t)+a) p - (x^2(t)+a^2)\right\}. 
+$$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{block}{解【续】}
+\begin{enumerate}
+\item \blue{确定$\alpha(t)$与$p(t)$的关系}
+\item[] 
+由极大值原理，在$t$时刻应选取$\alpha(t)$以极大化$H(x,p,a)$，即
+$$
+\alpha(t)  = \argmax_{a \in [0,1]} \left\{a  p(t)-a^2\right\}. 
+$$
+对$a  p(t)-a^2$关于$a$求导并置其为零，得
+$$
+p(t) - 2a = 0, 
+$$
+由此可得$\alpha(t)$与$p(t)$的关系为
+\begin{equation}\label{eq:alpha_p_ex2}
+\alpha(t) = \frac{p(t)}{2}. 
+\end{equation}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\small 
+\begin{block}{解【续】}
+\begin{enumerate}[2]
+\item \blue{确定轨迹$x(\cdot)$和共态$p(\cdot)$的关系}
+\item[] 动力方程为
+$$
+\left\{
+\begin{array}{ll}
+    \dot x(t) = x(t) + \frac{p(t)}{2},  &  t \in (0, T-1], \\[.04in]
+     x(0) = x^0, & 
+\end{array}
+\right.
+$$
+\item[] 伴随方程为
+\begin{equation}\label{eq:adj_ex2}
+    \left\{
+    \begin{array}{ll}
+        \dot p(t) = 2x(t)-p(t),  &  t \in [0,T).  \\[0.05in]
+        p(T) = 0, & 
+    \end{array}
+    \right.
+\end{equation} \pause
+\item[] 哈米尔顿系统的矩阵形式为
+\begin{equation}\label{eq:hds_ex2}
+\begin{bmatrix}
+\dot x(t) \\[0.05in]
+\dot p(t)
+\end{bmatrix}
+= 
+\underbrace{
+\begin{bmatrix*}[r]
+1 & \frac12\\[0.05in]
+2 & -1
+\end{bmatrix*}
+}_{\vM}
+\begin{bmatrix}
+ x(t)\\[0.05in]
+ p(t)
+\end{bmatrix}
+\end{equation}
+ 其解为
+ $$
+ \begin{bmatrix}
+ x(t)\\[0.05in]
+ p(t)
+\end{bmatrix}
+ = e^{t\vM} 
+ \begin{bmatrix}
+ x^0\\[0.05in]
+ p^0
+\end{bmatrix}. 
+ $$
+ \red{注意，由于$x^0$已知，还需选择$p^0$使得$p(T)=0$。}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\small 
+\begin{block}{解【续】}
+
+\begin{enumerate} 
+\setcounter{enumi}{2}
+\item \blue{反馈控制(feedback control)}
+\item[]  令$\alpha(t)=c(t)x(t)$，则
+$
+\ds \frac{p(t)}{2}=\alpha(t)=c(t)x(t) ~\Rightarrow~
+c(t) = \frac{p(t)}{2x(t)}
+$。
+定义
+\begin{equation}\label{eq:dt}
+    y(t) = \frac{p(t)}{x(t)}
+\end{equation}
+则$c(t)=\frac12 y(t)$。对\eqref{eq:dt}两边关于$t$求导可得
+$$
+\dot y(t) = \frac{\dot p(t)x(t)-p(t)\dot x(t)}{x^2(t)} 
+= \frac{\dot p(t)}{x(t)} - \frac{p(t)\dot x(t)}{{x^2(t)} }
+$$
+再由哈密尔顿系统\eqref{eq:hds_ex2}可得
+$$
+\dot y = \frac{2x-p}{x} - \frac{p}{x^2} (x+\frac{p}{2})
+= 2 - \frac{2p}{x} - \frac{p^2}{2x^2} = 2-2y-\frac{y^2}{2}. 
+$$
+因$p(T)=0$，故$y(T)=0$。综上，我们推导出了具有终止条件的一阶常微分方程：
+\begin{equation}\label{eq:raccati}
+    \left\{
+    \begin{array}{ll}
+        \dot y(t) = 2-2y-\frac{y^2}{2},  &  t \in [0,T).  \\[0.05in]
+        y(T) = 0, & 
+    \end{array}
+    \right.
+\end{equation}
+此即Raccati方程。\red{如果求出$y(t)$，则最优控制可表示为$\alpha^*(t)=\frac12 y(t)x(t)$。}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{\subsecname}
+\small 
+\begin{block}{解【续】}
+
+\begin{enumerate} 
+\setcounter{enumi}{3}
+\item \blue{求解Raccati方程}
+\item[]  用积分法
+$$
+\int \frac{dy}{-\frac{y^2}{2}-2y+2} = \int \,dt 
+~~\Longleftrightarrow~~
+\int \frac{dy}{y^2+4y-4} = -2 t 
+~~\Longleftrightarrow~~
+\int \frac{dy}{(y+2)^2-8} = -2 t 
+$$
+令$z=y+2$，则上式可改写为
+$$
+\int \frac{dz}{z^2-8} = -2 t 
+$$
+由
+$$
+\frac1{z^2-8} = \frac1{4\sqrt2} \left(\frac{1}{z-2\sqrt2}-\frac{1}{z+2\sqrt2}\right)
+$$
+可知
+$$
+\ln \left|\frac{z-2\sqrt2}{z+2\sqrt2}\right| = -8\sqrt2 t + C 
+% ~~\Longrightarrow~~
+% \left|\frac{z-2\sqrt2}{z+2\sqrt2}\right| = Ce^{-8\sqrt 2t}
+~~\xLongrightarrow[]{z(T)=2}~~
+\left|\frac{z-2\sqrt2}{z+2\sqrt2}\right| = c e^{8\sqrt 2(T-t)} ~(c=\frac{\sqrt2-1}{\sqrt2+1}), 
+$$
+解得
+$$
+z(t) = 
+$$
+%
+
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\subsection{庞特里亚金极大值原理（自由时间，固定端点）}
+\begin{frame}{\subsecname}
+\begin{itemize}
+    \item $\vA\subset \R^m$，$\vf: \R^n\times \vA \to \R^n$和$\vx^0, \vx^1\in\R^n$。
+    \item \red{容许控制集合}
+    $$
+    \cA = \left\{\valpha(\cdot):[0,\infty]\mapsto A~|~\valpha(\cdot)\text{可测}\right\}.
+    $$
+    \item \red{常微分方程组}
+    \begin{equation}\label{eq:ode_case2}
+        \left\{
+        \begin{array}{ll}
+             \dot \vx(t)= \vf(\vx(t),\valpha(t)), & t \in (0, \tau)  \\[.1in]
+             \vx(0)=\vx^0, ~  \vx(\tau)=\vx^1, &   
+        \end{array}
+        \right.
+    \end{equation}
+    其中$\tau:=\tau[\valpha(\cdot)]\le \infty$表示轨迹$\vx(t)$第一次到达\blue{给定目标点$\vx^1$}的时间。
+    \item \red{收益泛函}
+    \begin{equation}\label{eq:payoff_case2}
+        P[\valpha(\cdot)] = \int_0^\tau r(\vx(t),\valpha(t))\,dt,
+    \end{equation}
+    其中$r:\R^n \times A\to \R$为给定的运行收益。
+    \item \red{最优控制问题：} 求$\valpha^*(\cdot)$是的
+    $$
+    P[\valpha^*(\cdot)] = \max_{\valpha(\cdot)\in \cA} P[\valpha(\cdot)].
+    $$
+    \item \red{哈密尔顿量}：
+    $$
+    H(\vx,\vp,\valpha) = \vf(\vx,\valpha)\cdot \vp + r(\vx,\valpha), \quad \vx,\vp\in \R^n, \valpha\in \cA.
+    $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\subsecname}
+    \begin{theorem}[庞特里亚金极大值原理]
+    设$\valpha^*$为\eqref{eq:ode_sec4}和\eqref{eq:payoff_sec4}的最优控制，$\vx^*$为对应的最优轨迹，则存在一个共态（costate）函数$\vp^*:[0,\tau^*]\to \R^n$使得$(\vx^*, \vp^*)$是哈密尔顿系统
+    \begin{numcases}{}
+        \dot \vx(t)=\nabla_\vp H(\vx(t), \vp(t), \valpha(t)), \label{eq:hds_1} \\[.1in]
+        \dot \vp(t)=-\nabla_\vx H(\vx(t), \vp(t), \valpha(t)). \label{eq:hds_2}
+    \end{numcases}
+    的解，且
+    \begin{equation}\label{eq:max}
+        H(\vx^*(t), \vp^*(t), \valpha^*(t)) = \max_{\valpha(\cdot)\in \cA} H(\vx^*(t), \vp^*(t), \valpha(t)), \quad t\in [0,\tau^*].
+    \end{equation}
+    另外，
+    \begin{equation*}
+        H(\vx^*(t), \vp^*(t), \valpha^*(t)) \equiv 0, \quad \forall t\in [0,\tau^*].
+    \end{equation*}
+    其中$\tau^*$为轨迹$\vx^*(t)$第一次到达目标点$\vx^1$的时间。
+    % 称$\vx^*(\cdot)$为最优控制系统的状态(state)，而$\vp^*(\cdot)$为共态(costate)。
+    \end{theorem}
+\end{frame}
+ 
+
+\begin{frame}{\subsecname}
+\begin{example}[线性时间最优控制]
+\begin{itemize}
+\item 动力方程
+ $$
+ \left\{
+ \begin{aligned}
+      \dot \vx(t)&=\vM\vx(t)+\vN\valpha(t), \\
+      \vx(0)&=\vx^0. 
+ \end{aligned}
+ \right.
+ $$
+ 其中$\vx:\R^n\to\R^n,\valpha:\R^n\to\vA=\R^m,\vM\in\R^{n\times n}, \vN\in\R^{n\times m}$。\\[.1in]
+ \item 收益泛函
+ $$
+ P[\valpha(\cdot)] = -\int_0^\tau 1\,dt = -\tau,
+ $$
+ 其中$\tau$为轨迹第一次到达目标点$\vx^1=\v0$的时间。\\[.1in]
+ \item 最优控制问题：求最优控制$\valpha^*$使得
+ $$
+ P[\valpha^*(\cdot)] = \max_{\valpha(\cdot)\in\cA} P[\valpha(\cdot)].
+ $$
+\end{itemize}
+\end{example}
+    
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{block}{解}
+此时$r=-1$，故哈密尔顿量为
+ $$
+ H(\vx,\vp,\valpha) = \vf\cdot \vp + r = (\vM\vx+\vN\valpha) \cdot \vp - 1.
+ $$
+ 对应的哈密尔顿系统为
+ $$
+ \left\{
+ \begin{aligned}
+      \dot \vx(t) &= \vM\vx+\vN\valpha, \\
+      \dot \vp(t) &=-\vM^T\vp 
+ \end{aligned}
+ \right.
+ $$ 
+\end{block}
+   
+\end{frame}
+
+\begin{frame}{\subsecname}
+\begin{example}[月球着陆]
+对于一艘飞船，在$t$时刻，其高度为$h(t)$，速度为$v(t)$，质量为$m(t)$（随着燃料的使用发生变化），推力为$\alpha(t)$（控制变量）。
+\begin{itemize}
+ \item 动力方程 
+ $$
+ \left\{
+ \begin{array}{ll}
+      \dot h(t)=v(t), & h(0)=h_0>0\\[.05in]
+      \dot v(t)=-g+\frac{\alpha(t)}{m(t)}, & v(0)=v_0\\[.05in]
+      \dot m(t)=-k\alpha(t), & m(0)=m_0>0,
+ \end{array}
+ \right.
+ $$
+ 其中$h,v,m:\R\to \R, \alpha:\R\to A=[0,1]\subset \R$。\\[.1in]
+ \item 最优控制问题：由于目标是安全着陆，在着陆时刻$\tau$（首次使得$h(\tau)=v(\tau)=0$的时间），希望剩余燃料$m(\tau)$越多越好。 由于$\alpha=-\frac{\dot m}{k}$，问题等价于在着陆之前最小化总推力。故收益函数可定义为
+ $$
+ P[\alpha(\cdot)] = -\int_0^\tau \alpha(t) \,dt = \frac{m(\tau)-m_0}{k}.
+ $$ 
+ \end{itemize} 
+\end{example}
+\end{frame}
+\subsection{庞特里亚金极大值原理（含横截条件）}
+
+% \subsection{更多例子}
+
+\subsection{庞特里亚金极大值原理（含状态约束）}
+
+% \subsection{更多应用}
+
+\begin{frame}{\subsecname}
+  
+   
+  
+\end{frame}
+
+
+

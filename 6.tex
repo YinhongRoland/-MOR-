@@ -1,0 +1,127 @@
+\section{整数规划}
+
+\subsection{定义}
+\begin{frame}{\subsecname}
+本文研究的博弈模型为：
+    \begin{itemize}
+        \item 两个人的零和博弈
+        \item 最大化收益函数；另一个最小化支付函数。
+        \item 每个时刻，每个玩家的控制决策都取决于另一个人之前做的决策。
+    \end{itemize}
+    \begin{definition}
+    给定时间$0\le t \le T$ 和集合$\vA\subset\R^m, \vB\subset\R^l$,函数$\vf:\R^n\times \vA \times \vB \rightarrow R^n$。设可测映射$\valpha(\cdot): [t,T]\rightarrow \vA $为玩家1的控制函数，可测映射$\vbeta(\cdot): [t,T]\rightarrow \vB $为玩家2的控制函数，
+    相应的动态方程为：
+    \begin{align*}
+        \Dot{\vx}(s)=\vf(\vx(s),\valpha(s),\vbeta(s))\ \ (t\le s \le T)
+    \end{align*}
+    \end{definition}
+    
+    \begin{definition}[支付（报酬）函数]
+    博弈的支付函数定义为
+    \begin{align}
+        P_{\vx,t}[\valpha(\cdot),\vbeta(\cdot)]:=\int_t^T \gamma (\vx(s),\valpha (s),\vbeta(s)) \,ds +g(\vx(T)),
+    \end{align}
+    其中，玩家1通过调整$\valpha(\cdot)$最大化$P$, 玩家2通过调整$\vbeta(\cdot)$最小化$P$。
+    \end{definition}
+
+\end{frame}
+
+\begin{frame}{\subsecname}
+    \begin{definition}[博弈的控制集]     
+    博弈的控制集定义为
+    \begin{align*}
+        \vA(t):=\{\valpha(\cdot):[t,T]\rightarrow A, ~\valpha(\cdot)\text{可测}\}, \\
+        \vB(t):=\{\vbeta(\cdot):[t,T]\rightarrow B, ~\valpha(\cdot)\text{可测}\}.
+    \end{align*}
+    \end{definition}
+    
+    \begin{definition}[策略与策略集]
+    \begin{itemize}
+    \item 称映射$\vPhi : \vB(t)\rightarrow \vA(t)$为玩家1的\red{策略}，如果对任意$s\in[t, T]$，有
+        $$
+        \vbeta(\tau) \equiv \hat{\vbeta}(\tau)  
+        ~~\Rightarrow~~
+        \vPhi[\vbeta](\tau) \equiv\vPhi [ \hat{\vbeta}](\tau), ~~\forall\tau \in [t,s].
+        $$
+    \item 称映射$\vPsi : \vA(t)\rightarrow \vB(t)$为玩家2的\red{策略}，如果对任意$s\in[t, T]$，有
+        $$
+        \valpha(\tau) \equiv \hat{\valpha}(\tau)  
+        ~~\Rightarrow~~
+        \vPsi[\valpha](\tau) \equiv\vPsi [ \hat{\valpha}](\tau), ~~\forall\tau \in [t,s].
+        $$ 
+    \end{itemize}
+    \end{definition}
+    
+    \begin{alertblock}{注}
+    $\vPhi[\vbeta]$可看做是玩家1对玩家2选择控制$\vbeta(\cdot)$的反应，$\vPhi[\vbeta](\tau) \equiv\vPhi [ \hat{\vbeta}](\tau)$表示玩家1无法预见未来。
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{\subsecname}
+    \begin{definition}[策略集]
+    策略集定义为
+    \begin{align*}
+    \cA(t):=\text{玩家1始于$t$时刻的策略集}, \quad 
+    \cB(t):=\text{玩家2始于$t$时刻的策略集}.
+    \end{align*}
+    \end{definition}
+    
+    \begin{definition}[下值函数]
+    \begin{equation}\label{eq:lower_value}
+    v(\vx,t):=\inf_{\vPsi \in \cB(t)} \sup_{\valpha(\cdot)\in \vA(t)} P_{\vx,t} \left[\valpha(\cdot),\vPsi[\valpha](\cdot)\right].    
+    \end{equation}
+    \end{definition}
+     
+    \begin{definition}[上值函数]
+    \begin{equation}\label{eq:upper_value}
+    u(x,t):=\sup_{\vPhi \in \cA(t)} \inf_{\vbeta(\cdot)\in \vB(t)} P_{\vx,t} [\vPhi[\vbeta](\cdot),\vbeta(\cdot)]
+    \end{equation}
+    \end{definition}
+      
+    \begin{alertblock}{注}
+      对于两个玩家，一个选择控制，另一个给出其策略加以回应。显然，选择策略的玩家更具优势。事实上，可以证明
+      \begin{align*}
+         v(x,t) \le u(x,t).
+      \end{align*}
+    \end{alertblock}
+\end{frame}
+
+
+\subsection{动态规划，Issac方程}
+\begin{frame}{\secname}  
+  \begin{theorem}[上值函数和下值函数的偏微分方程]
+  设由\eqref{eq:lower_value}和\eqref{eq:upper_value}定义的$u,v$连续可导，则$u$是上Issac方程
+  \begin{equation}\label{eq:upper_issac}
+  \left\{
+  \begin{array}{l}
+    \ds u_t + \min_{\vbeta\in\vB}\max_{\valpha\in\vA}\left\{\vf(\vx,\valpha,\vbeta)\cdot\nabla_{\vx}u(\vx,t)+r(\vx,\valpha,\vbeta)\right\}= 0, \\[.1in]
+    u(\vx, T) = g(\vx). 
+  \end{array}
+  \right.
+  \end{equation}
+  的解；$v$是下Issac方程
+  \begin{equation}\label{eq:lower_issac}
+  \left\{
+  \begin{array}{l}
+    \ds v_t + \max_{\valpha\in\vA}\min_{\vbeta\in\vB}\left\{\vf(\vx,\valpha,\vbeta)\cdot\nabla_{\vx}v(\vx,t)+r(\vx,\valpha,\vbeta)\right\}= 0, \\[.1in]
+    v(\vx, T) = g(\vx). 
+  \end{array}
+  \right.
+  \end{equation}
+  的解。
+    \end{theorem}
+\end{frame}
+
+\subsection{博弈与庞特里亚金极大值原理}
+\begin{frame}{\secname}
+  
+   
+\end{frame}  
+  
+\subsection{应用}
+\begin{frame}{\secname}
+\begin{example}[消耗战和进攻战]
+    设两对手I和II正在交战，$x^1(t)$为I的资源供给，$x^2(t)$为II的资源供给。
+\end{example}
+\end{frame}
+

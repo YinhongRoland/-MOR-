@@ -1,0 +1,99 @@
+\section{线性规划的单纯型算法}
+
+\begin{frame}{\secname}
+\begin{itemize}
+    \item  图解法只能求解比较简单的线性规划形式，利用计算机求解虽然能够解决大规模的线性规划问题，但是掩盖了实际的求解方法和过程。为了更深入地学习线性规划和开发新的算法，必须要对线性规划的求解机理有一定的了解。
+\item 本章在对线性规划的模型有一定认识后，从代数形式上继续考察线性规划问题。首先，给出线性规划相关的一些概念和最优解的性质；然后，在此基础上提出单纯形原理；在对单纯形法进行完整描述后，本章将对单纯形法提出了进一步的说明。通过本章的学习，读者应该对线性规划的单纯形的思想和步骤有较为清晰的理解。
+\end{itemize}
+\end{frame}
+
+\subsection{线性规划的基本理论}
+\begin{frame}{可行区域的几何结构}
+考虑标准的线性规划问题：
+$$
+\min c^Tx
+$$
+$$
+Ax=b,\quad x\ge 0
+$$
+用$R^n$ 表示n维的欧式空间，这里$\vx \in R^n$, $c\in R^n$, $b\in R^n$, $\vA \in R^{m\times n}$. 不妨设可行区域$\vD=\{x\in R^n \mid \vA \vx=b, x\ge 0\}\neq \Phi$，因此线性方程组      相容，总可以把多余方程去掉，使剩下的等式约束的系数向量线性无关，故可设$秩(\vA)=m$,$m<n$。
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{\secname} 
+  \begin{definition}[行秩 \& 列秩]
+    \begin{itemize}
+    \item      
+      $\vA$的行向量组的秩，称为矩阵$\vA$的\red{行秩}。
+    \item
+      $\vA$的列向量组的秩，称为矩阵$\vA$的\red{列秩}。
+    \end{itemize}      
+  \end{definition}
+  \pause 
+  \begin{alertblock}{注}
+    对于$m\times n$阶矩阵$\vA$，其行秩$\le m$，列秩$\le n$。
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{\secname}
+  
+  \begin{definition}[阶梯型矩阵]
+    若矩阵$\vA$满足
+    \begin{itemize}
+    \item[(1)] 零行在最下方；
+    \item[(2)] 非零行首元的列标号随行标号的增加而严格递增，
+    \end{itemize}
+    则称$\vA$为\red{阶梯型矩阵}。
+  \end{definition}
+  \begin{example}
+    $$
+    \left(
+    \begin{array}{rrrr}
+      2&3&2&1\\
+      0&5&2&-2\\
+      0&0&3&2\\
+      0&0&0&0
+    \end{array}
+    \right)
+    $$
+  \end{example}
+  
+\end{frame}
+
+
+\begin{frame}{\secname}
+  
+  \begin{definition}[行简化阶梯型矩阵]
+    若矩阵$\vA$满足
+    \begin{itemize}
+    \item[(1)] 它是阶梯型矩阵；
+    \item[(2)] 非零首元为$1$；
+    \item[(3)] 非零行首元所在的列除其自身外，其余元素全为零，
+    \end{itemize}
+    则称$\vA$为\red{行简化阶梯型矩阵}。
+  \end{definition}
+  \begin{example}
+    $$
+    \begin{pmatrix*}[r]
+      1&2&0& 1&0&3\\
+      0&0&1&-2&0&4\\
+      0&0&0& 0&1&5\\
+      0&0&0& 0&0&0
+    \end{pmatrix*}
+    $$
+  \end{example}
+  
+\end{frame}
+
+

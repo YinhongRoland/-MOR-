@@ -1,0 +1,355 @@
+\section{线性规划的应用}
+\subsection{HJB方程的背景} 
+
+
+\begin{frame}{动态规划}
+\small 
+\begin{block}{动态规划（Dynamic programming，DP）}
+\begin{enumerate}
+\item 动态规划是一种通过把原问题分解为相对简单的子问题的方式以求解复杂问题的方法，在数学、管理科学、计算机科学、经济学和生物信息学等领域中广泛使用。\\
+\item 通常许多子问题非常相似，为此动态规划法试图仅仅解决每个子问题一次，从而减少计算量：一旦某个给定子问题的解已经算出，则将其记忆化存储，以便下次需要同一个子问题解之时直接查表。这种做法在重复子问题的数目关于输入的规模呈指数增长时特别有用。
+\end{enumerate}
+\end{block}
+
+\pause 
+\begin{block}{Bellman方程}
+\begin{enumerate}
+\item 动态规划将多期规划问题转为不同时间点上较简单的步骤，因此，它需要追踪决策背景情况随时间的变化。作正确决策所需要当前情况的资讯被称作是“状态（State）”\\
+\item 从任意时点上所挑选以操作的变数通常称为“控制变量”（Control Variables），或简称“控制”（Control）（控制理论中描述输入的变数）\\
+$$
+V(x_0)=\max_{\{a_t\}^{\infty }_{t=0}}\sum^{\infty}_{t=0}\beta^tF(x_t,\alpha_t)
+$$
+服从约束：$\alpha_T\in \Gamma(x_t),x_{t+1}=T(x_t,\alpha_t)\forall t=0,1,2,\cdots$
+。注意已经使用了$V(x_{0})$ 来表示可以通过最大化符合约束假设的目标函数得到的最优值。这个函数就是 价值函数。由于最优值取决于初始状态，因此，它是初始状态变量$x_{0}$的函数。
+\end{enumerate}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{HJB方程产生的背景}
+\small 
+\begin{block}{开普勒问题}
+在经典力学里，开普勒问题是二体问题的一个特别案例。假若，两个物体以有心力$F$互相作用；力的大小与距离$r$的平方成反比。则称此物理系统所涉及的问题为开普勒问题。反平方有心力以公式表示为$F=\frac{k}{r^2} \hat{r}$
+\\ 
+在很多状况下，会遇到开普勒问题。天体力学时常会涉及开普勒问题，因为牛顿万有引力遵守反平方定律。例如，人造卫星环绕着地球，行星环绕着太阳，或双星系统。
+
+\end{block}
+\begin{block}{开普勒问题解析}
+所有的吸引性的有心力都能够形成圆形轨道，前提是有心力必须相等于粒子的向心力。给定圆半径，这要求相当于物体的角速度已被决定。在此条目里，不会提到非有心力。一般而言，非有心力不能形成圆形轨道。
+假设，一个质量为$m$的粒子移动于一个连心势$V(r)$内,$r$是径向坐标。其拉格朗日方程为:
+$$
+m \frac{d^2r}{dt^2}-mr\omega^2=m\frac{d^2r}{dt^2}-\frac{L^2}{mr^3}=-\frac{dV}{dr};
+$$
+其中，时间是$t$,角速度是$\omega \equiv \frac{d\theta}{dt}$,运动常数角动量是$L=mr^2\omega$\\
+对于圆形轨道而言，第一项$m \frac{d^2r}{dt^2}=0$时就是圆形轨道。
+\end{block}
+\end{frame}
+
+\begin{frame}{HJB方程产生的背景}
+\small
+\begin{block}{开普勒问题与HJ方程}
+HJ方程是经典哈密顿量一个正则变换，经过该变换得到的结果是一个一阶非线性偏微分方程，方程之解描述了系统的行为。与哈密顿运动方程的不同之处在于 HJ方程是一个偏微分方程，每个变量对应于一个坐标，而哈密顿方程是一个一阶线性方程组，每两个方程对应于一个坐标。HJ方程可以漂亮地解析一些重要问题，例如开普勒问题。\\哈密顿-雅可比方程是一个一阶非线性偏微分方程，即
+$$
+\frac{\partial S}{\partial t}+H(q_1,\dots, q_N;\frac{\partial S}{\partial q_1},\dots \frac{\partial S}{\partial q_N};t)=0
+$$
+\begin{enumerate}
+\item 其中，$H$是哈密顿量，未知函数 $ S(q_{1}, \dots , q_{N};\ a_{1},\dots ,a_{N}; t)$称为哈密顿主函数，$ (q_{1}, \dots , q_{N})$ 是广义坐标，$ (a_{1},\dots ,\ a_{N})$ 是积分常数，$t$ 是时间。\\
+\item 假若能够找到哈密顿主函数 $S$ 的形式，就可以计算出广义坐标$ (q_{1}, \dots , q_{N})$ 与广义动量$ (p_{1},\dots , p_{N})$随时间的演变。这样，可以完全地解析物理系统随时间的演化。
+\end{enumerate}
+ 
+\end{block}
+
+\begin{block}{主函数的形式}
+那么，我们如何来求$S$的形式呢？
+
+\end{block}
+\end{frame}
+
+\begin{frame}{HJB方程产生的背景}
+\small
+\begin{block}{HJ方程与HJB方程}
+HJB方程的基础是以1950年代由理查德·贝尔曼及其同仁提出的动态规划，对应的离散系统方程式一般称为贝尔曼方程。在连续时间的结果可以视为由卡尔·雅可比及威廉·哈密顿提出，经典力学中HJ方程的延伸。
+
+\end{block}
+
+\begin{block}{HJB方程的形式}
+ 考虑最优控制问题
+\begin{equation}
+ V(\vx(0),0)=\max_{\valpha(\cdot)\in\cA} 
+ \int^T_0r(\vx(t),\valpha(t))\,dt+g(x(T))
+\end{equation}
+ 其中，$r(\vx,\valpha)$为收益函数，$g(\vx(T))$为计算其最终状态时收益值的函数，$\vx(t)$为系统状态向量，$\vx(0)$为初值（一般为已知），$\valpha(t),0\le t<T$是想要求得的控制向量。其系统满足下式：
+\begin{equation}
+ \dot{x}(t)=f(x(t),\alpha (t))
+\end{equation}                 
+\end{block}
+
+\begin{block}{HJB方程的变分法}
+1.HJB方程式的解是针对特定动态系统及相关成本（收益）函数下，可以有最小（最大）成本（收益）的控制实值函数。
+若只在某一个区域求解，HJB方程是一个必要条件，若是在整个状态空间下求解，HJB方程是充份必要条件。一些经典的变分问题，例如最速降线问题，可以用此方法求解。\\
+2.与处理函数的普通微积分相似，变分法是处理泛函的数学方法。譬如，已知的泛函可以通过未知函数的积分和它的导数来构造。变分法最终寻求的是极值函数：它们使得泛函取得极大或极小值。
+\end{block}
+\end{frame}
+
+
+\begin{frame}{动态规划问题}
+\small
+\begin{block}{变分法的数学原理}
+
+有时，通过将问题嵌入更大的问题类中，然后一次性解决更大的问题类，解决问题会更容易。
+\end{block}
+
+\begin{example}[计算$\ds \int_0^\infty \frac{\sin x}{x}\,dx$]
+考察
+$$
+I(\alpha) = \int_0^\infty e^{-\alpha x}\frac{\sin x}{x}\,dx.
+$$
+由
+$$
+I(\alpha) = \int_0^\infty (-x) e^{-\alpha x}\frac{\sin x}{x}\,dx = - \int_0^\infty e^{-\alpha x}\sin x\,dx
+= -\frac{1}{\alpha^2+1}, 
+$$
+可得
+$$
+I(\alpha) = -\arctan(x)+C.
+$$
+再由
+$$
+0 = I(\infty) = -\arctan(\infty)+C
+$$
+可知$C=\frac\pi2$。因此，
+$$
+I(\alpha) = -\arctan(x)+\frac{\pi}{2} ~~\Longrightarrow~~
+\int_0^\infty \frac{\sin x}{x}\,dx=I(0) = \frac{\pi}{2}.
+$$
+\end{example}
+\end{frame}
+
+\subsection{HJB方程及其应用} 
+\begin{frame}{HJB方程的形式}  
+\small 
+\begin{block}{最优控制问题（小$\rightarrow $大）}
+固定终止时间$T>0$，考察控制动力方程
+\begin{equation}
+\left\{
+\begin{array}{ll}
+    \dot \vx(s) = \vf(\vx(s), \valpha(s)), & 0<s<T, \\[0.05in]
+     \vx(0) = \vx^0.& 
+\end{array}
+\right.
+\end{equation}
+和收益泛函
+\begin{equation}
+    P[\valpha(\cdot)] = \int_0^T r(\vx(s),\valpha(s))\,ds + g(\vx(T)). 
+\end{equation}
+\end{block}
+\pause 
+通过改变起始时间和起始点，可将上述问题嵌入到一个更大的问题类，即
+\begin{block}{最优控制问题【延伸】}
+固定终止时间$T>0$，考察控制动力方程
+\begin{equation}
+\left\{
+\begin{array}{ll}
+    \dot \vx(s) = \vf(\vx(s), \valpha(s)), & \red{t}<s\le T, \\[0.05in]
+     \vx(\red{t}) = \red{\bx}.& 
+\end{array}
+\right.
+\end{equation}
+和收益泛函
+\begin{equation}
+    P_{\red{\bx,t}}[\valpha(\cdot)] = \int_{\red{t}}^T r(\vx(s),\valpha(s))\ds + g(\vx(T)). 
+\end{equation}
+\end{block}
+\end{frame}
+
+\begin{frame}{\secname}  
+\small 
+\begin{definition}[值函数]
+对$\bx\in\R^n, t\in\R$，值函数定义为从$(\bx,t)$开始可能获得的最大收益，即
+\begin{equation}
+    v(\bx,t)=\sup_{\valpha(\cdot)\in\cA} P_{\bx,t}[\valpha(\cdot)].
+\end{equation}
+显然，
+\begin{equation}
+    v(\bx, T) = g(\bx). 
+\end{equation}
+\end{definition}
+\pause 
+ 
+\begin{theorem}[哈密尔顿-雅克比-贝尔曼(HJB)方程]
+设值函数$v(\bx,t)\in C^1(\R^n\times(0,T])$，则其满足HJB方程
+\begin{equation}\label{eq:HJB}
+\left\{
+\begin{array}{rcll}
+     \ds v_t(\bx, t)  + \max_{\va\in \vA} \left\{\vf(\bx,\va)\cdot \nabla_{\bx} v(\bx,t) + r(\bx, \va)\right\} &=& 0, & (\bx,t) \in \R^n\times [0, T), \\[.05in]
+     v(\bx, T)&=& g(\bx), & \bx \in \R^n.
+\end{array}
+\right.
+\end{equation}
+\end{theorem}
+
+\pause 
+
+\begin{alertblock}{注}
+HJB方程\eqref{eq:HJB}可改写为
+$$
+v_t(\bx,t) + H(\bx, \nabla_\bx v) = 0, 
+$$
+其中
+$$
+H(\bx, \vp) := \max_{\va\in \vA} H(\bx,\vp,\va) = \max_{\va\in \vA} \left\{\vf(\bx,\va)\cdot \vp+ r(\bx, \va)\right\}, ~~ \bx,\vp\in\R^n.
+$$
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}{\secname}  
+\begin{block}{证明:（从开始努力做到最优胜过先笨后再做到最优）}
+(证明的思路：首先，对于任意时间t下，首先找到$\Delta t$期间内优化函数的形式，将优化问题转化成一个微分方程，分析局部最优控制下的方程形式；其次，根据t的任意性推导全局到全定义域)\\
+令$[t, T]= [t, t+\Delta t]  \cup [t+\Delta t, T]$。任取$\va\in \vA$，则时段$[t, t+h]$的动力方程为
+$$
+\left\{
+\begin{array}{lc}
+    \dot\vx(s) = \vf(\vx(s), \va),  &  s \in [t, t+\Delta t]\\[.05in]
+    \vx(t) = \bx& 
+\end{array}
+\right.
+$$
+收益为
+$$
+\int_{t}^{t+\Delta t} r(\vx(s), \va)\,ds. 
+$$
+而在时段$[t+\Delta t, T]$内，收益为$v(\vx(t+\Delta t),t+\Delta t)$。因此，总收益为
+$$
+\int_{t}^{t+\Delta t} r(\vx(s), \va)\,ds + v(\vx(t+\Delta t),t+\Delta t).
+$$
+但是，从$(\bx,t)$出发的最大收益为$v(\bx, t)$，从而有
+\begin{equation}\label{eq:vv}
+    v(\bx,t)\ge \int_{t}^{t+\Delta t} r(\vx(s), \va)\,ds + v(\vx(t+\Delta t),t+\Delta t). 
+\end{equation}
+\end{block}  
+\end{frame}
+
+\begin{frame}{\secname}  
+\begin{block}{证明.}
+\eqref{eq:vv}可改写为
+$$
+\frac{v(\vx(t+\Delta t),t+\Delta t)-v(\bx,t)}{h} + \frac1h\int_{t}^{t+\Delta t} r(\vx(s), \va)\,ds \le 0. 
+$$
+% 由Taylor展开
+% $$
+% \begin{aligned}
+% v(\vx(t+\Delta t),t+\Delta t)-v(\bx,t) = v(\vx(t+\Delta t),t+\Delta t)-v(\vx(t),t)
+% \end{aligned}
+% $$
+令$h\to 0$，得
+$$
+v_t(\bx, t) + \nabla_\bx v(\vx(t), t)\cdot \dot\vx(t) + r(\vx(t), \va) \le 0.
+$$
+而$\vx(\cdot)$满足
+$$
+\left\{
+\begin{array}{lc}
+    \dot\vx(s) = \vf(\vx(s), \va),  &  s \in [t, t+h]\\[.05in]
+    \vx(t) = \bx& 
+\end{array}
+\right.
+$$
+故
+$$
+v_t(\bx, t) + \nabla_\bx v(\bx, t)\cdot \vf(\bx, \va), + r(\bx, \va) \le 0.
+$$
+由$\va$的任意性得
+\begin{equation}\label{eq:max}
+\max_{\va\in\vA} \left\{v_t(\bx, t) + \nabla_\bx v(\bx, t)\cdot \vf(\bx, \va) + r(\bx, \va)\right\} \le 0.    
+\end{equation}
+\end{block}  
+\end{frame}
+
+\begin{frame}{\secname}  
+\begin{proof}
+接下来证明式\eqref{eq:max}左边的最大值为零。为此，假设$\valpha^*(\cdot)$和$\vx^*(\cdot)$分别为控制问题的最优控制和最优轨迹。时段$[t,t+\Delta t]$的收益为
+$\ds 
+\int_{t}^{t+\Delta t} r(\vx^*(s),\valpha^*(s))\,ds
+$，
+剩余收益为$v(\vx^*(t+h),\valpha^*(t+h))$。因此，总收益为
+$$
+\int_{t}^{t+\Delta t} r(\vx^*(s),\valpha^*(s))\,ds + v(\vx^*(t+h),\valpha^*(t+h)) = v(\bx, t),
+$$
+整理可得
+$$
+\frac{v(\vx^*(t+h),\valpha^*(t+h))-v(\bx, t)}{\Delta t} + \frac{1}{\Delta t}\int_{t}^{t+\Delta t} r(\vx^*(s),\valpha^*(s))\,ds = 0.
+$$
+令$h=0$并设$\valpha^*(t)=\va^*\in \vA$，得
+$$
+v_t(\bx, t) + \nabla_\bx v(\bx, t)\cdot \vx^*(t) + r(\bx, \va^*)=0.
+$$
+因此，存在某个$\vA$中的参数$\va^*$使得
+$$
+v_t(\bx, t) + \nabla_\bx v(\bx, t)\cdot \vf(\bx,\va^*) + r(\bx, \va^*)=0.
+$$
+证毕。
+\end{proof}  
+\end{frame}
+
+\begin{frame}{\secname}  
+\begin{block}{问题}
+如何使用动态规划方法来解决最优控制问题？
+\end{block} \pause 
+\begin{enumerate}
+    \item 求解HJB方程，算得值函数$v(\bx, t)$；\\[.1in]
+    \item 按如下方式使用值函数和HJB方程来推导最优反馈控制$\valpha^*(\cdot)$。\\[.1in]
+    \begin{itemize}
+        \item 选择$\valpha(\bx, t)$使得
+        $$
+        v_t(\bx, t) + \nabla_\bx v(\bx, t)\cdot \vf(\bx,\valpha(\bx, t)) + r(\bx, \valpha(\bx, t))=0
+        $$
+        成立；\\[.1in]
+        \item 求解常微分方程组
+        $$
+        \left\{
+        \begin{array}{ll}
+            \dot\vx(s) = \vf(\vx(s), \valpha(\vx(s), t)),  &  s \in [t, T], \\[.05in]
+            \vx(t) = \bx. & 
+        \end{array}
+        \right.
+        $$
+        其解即为最优轨迹$\vx^*(\cdot)$；\\[.1in]
+        \item 定义最优控制为
+        \begin{equation}\label{eq:alpha_star}
+            \valpha^*(s) = \valpha(\vx^*(t),t).
+        \end{equation}
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{\secname}  
+\small 
+\begin{theorem}[最优控制验证]
+由\eqref{eq:alpha_star}定义的控制$\valpha^*(\cdot)$是最优的。
+\end{theorem}  
+\begin{proof}
+由HJB方程的推导过程可知
+$$
+P_{x,t}[\alpha^*(\cdot)]=\int^T_t r(x^*(s),\alpha^*(s))ds+g(x^*(T))
+$$
+根据\eqref{eq:alpha_star}式中$\alpha(\cdot)$的定义
+$$
+\begin{aligned}
+P_{x,t}[\alpha^*(\cdot)] &=\int^T_t( \vv_t(\bx*(s), s) + \nabla_\bx \vv(\bx^*(s), s)\cdot \vf(\bx^*(s),\valpha(\bx^*(s), s)) )ds+g(x^*(T))\\
+&=-\int^T_t [\vv_t(\bx^*(s),s)+ \nabla_\bx \vv(\bx^*(s), s)\dot{\bx}^*(s)]\,ds+g(\bx^*(T))\\
+&=-\int^T_t \frac{\vv_t(\bx^*(s),s)}{ds}\,ds+g(\bx^*(T))\\
+&= -\vv(\bx^*(T),T)+\vv(\bx^*(t),t)+g(x^*(T)) =\vv(\bx,t) =\sup_{\alpha(\cdot)\in\vA}P_{x,t}[\alpha(\cdot)].
+\end{aligned}
+$$
+因此有，$\ds P_{x,t}[\alpha^*(\cdot)]=\sup_{\alpha(\cdot)\in \vA}P_{x,t}[\alpha(\cdot)]$，说明$\alpha^*(\cdot)$
+是最优控制函数。 
+\end{proof}
+
+\end{frame}
+
+\subsection{与庞特里亚金极大值原理的关系} 
+\begin{frame}{\secname}  
+  
+\end{frame}
+

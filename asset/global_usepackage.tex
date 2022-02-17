@@ -1,0 +1,205 @@
+\usepackage{amsmath,amsthm,amssymb,mathdots}
+\usepackage{mathtools} %% pmatrix*
+%% \usepackage{fourier}
+\usepackage{multicol}
+\usepackage{multirow}
+% \usepackage[table]{xcolor}    
+%\usepackage{fontspec}
+\usepackage{bbding}
+\usepackage{subfigure}
+%\usepackage[most]{tcolorbox}
+\newcounter{testexample}
+\usepackage{xparse}
+\usepackage{lipsum}
+\usepackage[UTF8,noindent]{ctex}
+\usepackage{extarrows}
+\usepackage{array}
+%% \usepackage{courier}
+\usepackage{animate}
+\usepackage{dcolumn}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage[]{hyperref}
+\usepackage{pgf}
+%% \usepackage{pgfplots}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes.multipart,chains}
+\usetikzlibrary{arrows,snakes,backgrounds,shapes,patterns,shadows}
+\usetikzlibrary{matrix,fit,positioning,decorations.pathmorphing}
+%% \usepackage{calligraphy}
+%% \usepackage{matrixcells}
+%% \usepackage{tikzamsmatrix}
+\usepackage{color, colortbl}
+\usepackage{cases}
+\usepackage{enumerate}
+
+\usepackage{listings}
+\lstset{
+        language=python,
+        keywordstyle=\color{red},
+        % frame=single,
+        basicstyle=\ttfamily,
+        commentstyle=\color{blue},
+        breakindent=0pt,
+        rulesepcolor=\color{red!20!green!20!blue!20},
+        rulecolor=\color{black},
+        tabsize=4,
+        numbersep=5pt,
+        breaklines=true,
+        %backgroundcolor=\color{red!15},
+        showstringspaces=false,
+        showspaces=false,
+        showtabs=false,
+        extendedchars=false,
+        escapeinside=``,
+}
+\tikzset{mystyle/.style n args={5}{
+    rectangle,
+    draw,
+    fill=#1!50,
+    % rounded corners,
+    minimum height=#2cm,
+    minimum width=#3cm,
+    text width=#4cm,
+    align=#5
+  }}
+
+\tikzset{mystyle1/.style n args={5}{
+    rectangle,
+    fill=#1!50,
+    minimum height=#2cm,
+    minimum width=#3cm,
+    text width=#4cm,
+    align=#5
+  }}
+
+\tikzset{mystyle2/.style n args={5}{
+    rectangle,
+    % draw,
+    fill=#1!30,
+    % rounded corners,
+    minimum height=#2,
+    minimum width=#3\textwidth,
+    text width=#4\textwidth,
+    align=#5
+  }}
+
+
+\tikzset{myarrow/.style n args={2}{
+    ->,
+    #1,
+    line width=#2
+  }}
+
+\tikzset{list/.style={
+rectangle split,
+rectangle split parts=2,
+rectangle split horizontal,
+rectangle split part fill={red!30,blue!20},
+rounded corners,
+node distance=.5cm,
+draw=black, thick,
+minimum height=0.35cm,
+text width=.5cm,
+text centered,
+}}
+
+\tikzset{dlist/.style args={#1}{
+rectangle split,
+rectangle split parts=3,
+rectangle split horizontal,
+rectangle split part fill={blue!20,red!30,blue!20},
+rounded corners,
+node distance=#1mm,
+draw=black, thick,
+minimum height=0.35cm,
+text centered,
+}}
+
+\tikzset{sentinel/.style args={#1}{
+rectangle split,
+rectangle split parts=3,
+rectangle split horizontal,
+rectangle split part fill={white,white,white},
+rounded corners,
+node distance=#1mm,
+draw=black, thick,
+minimum height=0.35cm,
+text centered,
+}}
+
+\tikzset{square/.style args={#1}{
+rectangle,draw,
+fill=#1!30,
+minimum height=.35cm,
+minimum width=.35cm
+}}
+
+\usepackage{refcount}
+\usepackage{multicol}
+\newcounter{countitems}
+\newcounter{nextitemizecount}
+\newcommand{\setupcountitems}{%
+        \stepcounter{nextitemizecount}%
+        \setcounter{countitems}{0}%
+        \preto\item{\stepcounter{countitems}}%
+}
+\makeatletter
+\newcommand{\computecountitems}{%
+        \edef\@currentlabel{\number\c@countitems}%
+        \label{countitems@\number\numexpr\value{nextitemizecount}-1\relax}%
+}
+\newcommand{\nextitemizecount}{%
+        \getrefnumber{countitems@\number\c@nextitemizecount}%
+}
+\newcommand{\previtemizecount}{%
+        \getrefnumber{countitems@\number\numexpr\value{nextitemizecount}-1\relax}%
+}
+\makeatother    
+\newenvironment{AutoMultiColItemize}{%
+        \ifnumcomp{\nextitemizecount}{>}{3}{\begin{multicols}{2}}{}%
+                \setupcountitems\begin{itemize}}%
+                {\end{itemize}%
+                \unskip\computecountitems\ifnumcomp{\previtemizecount}{>}{3}{\end{multicols}}{}}
+
+
+%% If you build your own environment using array, you're on the safe side. I would extend an int%% ernal macro of amsmath using an optional argument.
+%%
+%% Advantages:
+%%
+%% It extends several matrix environments at the same time (matrix, pmatrix, bmatrix, Bmatrix, vmatrix, Vmatrix).
+%%
+%% The names and meanings of those environments remain (not apmatrix etc.)
+%%
+%% Spacing etc. is the same like in amsmath.
+%%
+%% You could do more than just insert a vertical line (use color and alignment, for instance right aligned columns because of minus signs).
+%%
+%% If you omit the optional argument, it acts exactly like the amsmath environment.
+%%
+%% Caution:
+%%
+%% Since you redefine an internal macro, it might not work if the original package changes its code. But amsmath.sty has not been changed for more than 10 years. If there's a change in the matrices later, you could adjust your own macro.
+%% Code:
+%% Here's the redefinition, just put it in your preamble after loading amsmath:
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+%% Examples:
+
+%% Simple augmented matrix:
+
+%% \begin{pmatrix}[cc|c]
+%%   1 & 2 & 3\\
+%%   4 & 5 & 9
+%% \end{pmatrix}
+%% More complex use, with different alignment, spacing and color:
+
+%% \begin{bmatrix}[*2cr@{\quad}|@{\quad}>{\color{red}}r]
+%%   a & b & 1  &  4 \\
+%%   c & d & -2 & -3
+%% \end{bmatrix}
